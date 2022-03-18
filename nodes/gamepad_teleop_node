@@ -87,6 +87,46 @@ class GamepadState:
         self.RY = msg.axes[3]
         self.RT = msg.axes[13]
 
+    def parse_xbox_usb(self, msg):
+        if len(msg.buttons) != 15 or len(msg.axes) != 8:
+            raise ValueError('Invalid number of buttons (%d) or axes (%d)' % (
+                len(msg.buttons), len(msg.axes)))
+        # Same as the 'back'
+        self.Select = msg.buttons[6]
+
+        # XBox controller doesn't seem to have these. 
+        # It's when you press the joystick like a button
+        # self.L3 = msg.buttons[1]
+        # self.R3 = msg.buttons[2]
+
+        self.Start = msg.buttons[7]
+        
+        self.Tr = msg.buttons[3] #Y
+        self.Ci = msg.buttons[1] #B
+        self.Cr = msg.buttons[0] # A
+        self.Sq = msg.buttons[2] # X
+
+        # self.Sync = msg.buttons[16]
+
+        # Dpad buttons
+        self.DU = msg.buttons[13]
+        self.DR = msg.buttons[12]
+        self.DD = msg.buttons[14]
+        self.DL = msg.buttons[11]
+
+        # left and right side top (1) and bottom (2) triggers
+        self.L2 = msg.axes[2]
+        self.R2 = msg.buttons[7]
+        self.L1 = msg.axes[5]
+        self.R1 = msg.buttons[5]
+
+        self.LX = msg.axes[0]
+        self.LY = msg.axes[1]
+        self.LT = msg.axes[2]
+        self.RX = msg.axes[3]
+        self.RY = msg.axes[4]
+        self.RT = msg.axes[5]
+
     def parse(self, msg):
         err = None
         try:
@@ -95,6 +135,10 @@ class GamepadState:
             err = e
         try:
             return self.parse_ps3_usb2(msg)
+        except ValueError, e:
+            err = e
+        try:
+            return self.parse_xbox_usb(msg)
         except ValueError, e:
             err = e
         raise err

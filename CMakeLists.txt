@@ -6,11 +6,8 @@ project(tello_driver)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
-  camera_info_manager_py
   dynamic_reconfigure
   geometry_msgs
-  codec_image_transport
-  image_transport
   message_generation
   nav_msgs
   rospy
@@ -110,11 +107,8 @@ generate_dynamic_reconfigure_options(
 catkin_package(
 #  INCLUDE_DIRS include
   CATKIN_DEPENDS cv_bridge 
-                 camera_info_manager_py
                  dynamic_reconfigure 
                  geometry_msgs 
-                 codec_image_transport
-                 image_transport 
                  message_runtime 
                  nav_msgs 
                  rospy 

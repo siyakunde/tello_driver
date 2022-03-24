@@ -182,8 +182,8 @@ class GamepadTeleopNode:
             'cmd_vel', Twist, queue_size=10, latch=False)
         self.pub_fast_mode = rospy.Publisher(
             'fast_mode', Empty,  queue_size=1, latch=False)
-        self.pub_video_mode = rospy.Publisher(
-            'video_mode', Empty, queue_size=1, latch=False)
+        # self.pub_video_mode = rospy.Publisher(
+        #     'video_mode', Empty, queue_size=1, latch=False)
         self.sub_agent_cmd_in = rospy.Subscriber(
             'agent_cmd_vel_in', Twist, self.agent_cmd_cb)
         self.sub_joy = rospy.Subscriber('/joy', Joy, self.joy_cb)
@@ -237,10 +237,10 @@ class GamepadTeleopNode:
             self.pub_flattrim.publish()
             #rospy.logwarn('Issued FLATTRIM')
             
-        # Process video mode
-        if not self.joy_state_prev.Tr and self.joy_state.Tr:
-            self.pub_video_mode.publish()
-            #rospy.logwarn('Issued VIDEO_MODE')            
+        # # Process video mode
+        # if not self.joy_state_prev.Tr and self.joy_state.Tr:
+        #     self.pub_video_mode.publish()
+        #     #rospy.logwarn('Issued VIDEO_MODE')            
 
         if not self.joy_state_prev.Sq and self.joy_state.Sq:
             self.pub_flip.publish(self.flip_dir)

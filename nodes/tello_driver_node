@@ -24,10 +24,10 @@ from tellopy._internal import logger
 #### Additional module imports (Jordy) ####
 
 # Publish camera info to rectify camera images
-from sensor_msgs.msg import CameraInfo
+# from sensor_msgs.msg import CameraInfo
 
 # To load camera calibration from '.yaml' format
-import camera_info_manager as cim
+# import camera_info_manager as cim
 
 # Access to all protocol constant variables
 from tellopy._internal.protocol import *
@@ -73,7 +73,7 @@ class TelloNode(tello.Tello):
 #######################################BEGIN#######################################    
 
     ## Add event variable(s) to leave 'TelloPy' package untouched (Jordy) ##
-    EVENT_VIDEO_FRAME_H264 = event.Event('video frame h264')
+    # EVENT_VIDEO_FRAME_H264 = event.Event('video frame h264')
 
 #########################################END#######################################    
     def __init__(self):
@@ -86,8 +86,8 @@ class TelloNode(tello.Tello):
             rospy.get_param('~tello_cmd_server_port', 8889))
         self.connect_timeout_sec = float(
             rospy.get_param('~connect_timeout_sec', 10.0))
-        self.stream_h264_video = bool(
-            rospy.get_param('~stream_h264_video', False))
+        # self.stream_h264_video = bool(
+        #     rospy.get_param('~stream_h264_video', False))
         self.bridge = CvBridge()
         self.frame_thread = None
 
@@ -120,12 +120,12 @@ class TelloNode(tello.Tello):
         # NOTE: ROS interface deliberately made to resemble bebop_autonomy
         self.pub_status = rospy.Publisher(
             'status', TelloStatus, queue_size=1, latch=True)
-        if self.stream_h264_video:
-            self.pub_image_h264 = rospy.Publisher(
-                'image_raw/h264', CompressedImage, queue_size=10)
-        else:
-            self.pub_image_raw = rospy.Publisher(
-                'camera/image_raw', Image, queue_size=10)
+        # if self.stream_h264_video:
+        #     self.pub_image_h264 = rospy.Publisher(
+        #         'image_raw/h264', CompressedImage, queue_size=10)
+        # else:
+        #     self.pub_image_raw = rospy.Publisher(
+        #         'camera/image_raw', Image, queue_size=10)
 
         self.sub_takeoff = rospy.Subscriber('takeoff', Empty, self.cb_takeoff)
         self.sub_manual_takeoff = rospy.Subscriber('manual_takeoff', Empty, self.cb_manual_takeoff)
@@ -158,22 +158,22 @@ class TelloNode(tello.Tello):
 
         self.subscribe(self.EVENT_LOG_DATA, self.cb_data_log)
 
-        self.sub_zoom = rospy.Subscriber('video_mode', Empty, self.cb_video_mode, queue_size=1)
+        # self.sub_zoom = rospy.Subscriber('video_mode', Empty, self.cb_video_mode, queue_size=1)
 
-        if self.stream_h264_video:
-            self.start_video()
-            self.subscribe(self.EVENT_VIDEO_DATA, self.cb_video_data)            
-            self.subscribe(self.EVENT_VIDEO_FRAME_H264, self.cb_h264_frame)
-        else:
+        # if self.stream_h264_video:
+        #     self.start_video()
+        #     self.subscribe(self.EVENT_VIDEO_DATA, self.cb_video_data)            
+        #     self.subscribe(self.EVENT_VIDEO_FRAME_H264, self.cb_h264_frame)
+        # else:
             
-            self.frame_thread = threading.Thread(target=self.framegrabber_loop)
-            self.frame_thread.start()
+        #     self.frame_thread = threading.Thread(target=self.framegrabber_loop)
+        #     self.frame_thread.start()
 
-        calib_path = rospy.get_param('~camera_calibration', '') 
-        self.caminfo = cim.loadCalibrationFile(calib_path, 'camera_front')
-        self.caminfo.header.frame_id = rospy.get_param('~camera_frame', rospy.get_namespace() + 'camera_front')
-        self.pub_caminfo = rospy.Publisher('camera/camera_info', CameraInfo, queue_size=1, latch=True)                
-        self.pub_caminfo.publish(self.caminfo)
+        # calib_path = rospy.get_param('~camera_calibration', '') 
+        # self.caminfo = cim.loadCalibrationFile(calib_path, 'camera_front')
+        # self.caminfo.header.frame_id = rospy.get_param('~camera_frame', rospy.get_namespace() + 'camera_front')
+        # self.pub_caminfo = rospy.Publisher('camera/camera_info', CameraInfo, queue_size=1, latch=True)                
+        # self.pub_caminfo.publish(self.caminfo)
 
         self.sub_emergency = rospy.Subscriber('emergency', Empty, self.cb_emergency, queue_size=1)               
         
@@ -247,48 +247,48 @@ class TelloNode(tello.Tello):
 
         return self._Tello__send_stick_command()
 
-    def cb_video_data(self, event, sender, data, **args):
-        now = time.time()
+    # def cb_video_data(self, event, sender, data, **args):
+    #     now = time.time()
         
-        # parse packet
-        seq_id = byte(data[0])
-        sub_id = byte(data[1])
-        packet = data[2:]
-        self.sub_last = False
-        if sub_id >= 128: # MSB asserted
-            sub_id -= 128
-            self.sub_last = True
+    #     # parse packet
+    #     seq_id = byte(data[0])
+    #     sub_id = byte(data[1])
+    #     packet = data[2:]
+    #     self.sub_last = False
+    #     if sub_id >= 128: # MSB asserted
+    #         sub_id -= 128
+    #         self.sub_last = True
         
-        #associate packet to (new) frame
-        if self.prev_seq_id is None or self.prev_seq_id != seq_id:
-            # detect wrap-arounds
-            if self.prev_seq_id is not None and self.prev_seq_id > seq_id:
-                self.seq_block_count += 1
-            self.frame_pkts = [None]*128 # since sub_id uses 7 bits
-            self.frame_t = now
-            self.prev_seq_id = seq_id
-        self.frame_pkts[sub_id] = packet
+    #     #associate packet to (new) frame
+    #     if self.prev_seq_id is None or self.prev_seq_id != seq_id:
+    #         # detect wrap-arounds
+    #         if self.prev_seq_id is not None and self.prev_seq_id > seq_id:
+    #             self.seq_block_count += 1
+    #         self.frame_pkts = [None]*128 # since sub_id uses 7 bits
+    #         self.frame_t = now
+    #         self.prev_seq_id = seq_id
+    #     self.frame_pkts[sub_id] = packet
         
-        # publish frame if completed
-        if self.sub_last and all(self.frame_pkts[:sub_id+1]):
-            if isinstance(self.frame_pkts[sub_id], str):
-                frame = ''.join(self.frame_pkts[:sub_id+1])
-            else:
-                frame = b''.join(self.frame_pkts[:sub_id+1])
-            self._Tello__publish(event=self.EVENT_VIDEO_FRAME_H264,
-                           data=(frame, self.seq_block_count*256+seq_id, self.frame_t))        
+    #     # publish frame if completed
+    #     if self.sub_last and all(self.frame_pkts[:sub_id+1]):
+    #         if isinstance(self.frame_pkts[sub_id], str):
+    #             frame = ''.join(self.frame_pkts[:sub_id+1])
+    #         else:
+    #             frame = b''.join(self.frame_pkts[:sub_id+1])
+    #         self._Tello__publish(event=self.EVENT_VIDEO_FRAME_H264,
+    #                        data=(frame, self.seq_block_count*256+seq_id, self.frame_t))        
 
-    def send_req_video_sps_pps(self):
-        """Manually request drone to send an I-frame info (SPS/PPS) for video stream."""
-        pkt = Packet(VIDEO_START_CMD, 0x60)
-        pkt.fixup()
-        return self.send_packet(pkt)
+    # def send_req_video_sps_pps(self):
+    #     """Manually request drone to send an I-frame info (SPS/PPS) for video stream."""
+    #     pkt = Packet(VIDEO_START_CMD, 0x60)
+    #     pkt.fixup()
+    #     return self.send_packet(pkt)
 
-    def set_video_req_sps_hz(self, hz):
-        """Internally sends a SPS/PPS request at desired rate; <0: disable."""
-        if hz < 0:
-            hz = 0.
-        self.video_req_sps_hz = hz
+    # def set_video_req_sps_hz(self, hz):
+    #     """Internally sends a SPS/PPS request at desired rate; <0: disable."""
+    #     if hz < 0:
+    #         hz = 0.
+    #     self.video_req_sps_hz = hz
         
     # emergency command
     def emergency(self):
@@ -307,11 +307,11 @@ class TelloNode(tello.Tello):
 
 ##### Additions to 'tello_driver_node' (Jordy) #####
     
-    def cb_video_mode(self, msg):
-        if not self.zoom:
-            self.set_video_mode(True)
-        else:
-            self.set_video_mode(False)
+    # def cb_video_mode(self, msg):
+    #     if not self.zoom:
+    #         self.set_video_mode(True)
+    #     else:
+    #         self.set_video_mode(False)
 
     def cb_emergency(self, msg):
         success = self.emergency()
@@ -332,16 +332,16 @@ class TelloNode(tello.Tello):
             self.set_att_limit(config.attitude_limit)
         if update_all or self.cfg.low_bat_threshold != config.low_bat_threshold:
             self.set_low_bat_threshold(config.low_bat_threshold)
-        if update_all or self.cfg.fixed_video_rate != config.fixed_video_rate:
-            self.set_video_encoder_rate(config.fixed_video_rate)
-            req_sps_pps = True
-        if update_all or self.cfg.video_req_sps_hz != config.video_req_sps_hz:
-            self.set_video_req_sps_hz(config.video_req_sps_hz)
-            req_sps_pps = True
+        # if update_all or self.cfg.fixed_video_rate != config.fixed_video_rate:
+        #     self.set_video_encoder_rate(config.fixed_video_rate)
+        #     req_sps_pps = True
+        # if update_all or self.cfg.video_req_sps_hz != config.video_req_sps_hz:
+        #     self.set_video_req_sps_hz(config.video_req_sps_hz)
+        #     req_sps_pps = True
         if update_all or self.cfg.vel_cmd_scale != config.vel_cmd_scale:
             self.vel_cmd_scale = config.vel_cmd_scale
-        if req_sps_pps:
-            self.send_req_video_sps_pps()
+        # if req_sps_pps:
+        #     self.send_req_video_sps_pps()
 
         self.cfg = config
         return self.cfg
@@ -382,7 +382,7 @@ class TelloNode(tello.Tello):
             is_factory_mode=data.factory_mode,
             fly_mode=data.fly_mode,
             throw_takeoff_timer_sec=data.throw_fly_timer/10.,
-            camera_state=data.camera_state,
+            # camera_state=data.camera_state,
             electrical_machinery_state=data.electrical_machinery_state,
             front_in=data.front_in,
             front_out=data.front_out,
@@ -472,35 +472,35 @@ class TelloNode(tello.Tello):
         self.caminfo.header.stamp = rospy.Time.from_sec(frame_secs)
         self.pub_caminfo.publish(self.caminfo)        
 
-    def framegrabber_loop(self):
-        import av #Import here as 'hack' to prevent troublesome install of PyAV when not used
-        # Repeatedly try to connect
-        vs = self.get_video_stream()
-        while self.state != self.STATE_QUIT:
-            try:
-                container = av.open(vs)
-                break
-            except BaseException as err:
-                rospy.logerr('fgrab: pyav stream failed - %s' % str(err))
-                time.sleep(1.0)
+    # def framegrabber_loop(self):
+    #     import av #Import here as 'hack' to prevent troublesome install of PyAV when not used
+    #     # Repeatedly try to connect
+    #     vs = self.get_video_stream()
+    #     while self.state != self.STATE_QUIT:
+    #         try:
+    #             container = av.open(vs)
+    #             break
+    #         except BaseException as err:
+    #             rospy.logerr('fgrab: pyav stream failed - %s' % str(err))
+    #             time.sleep(1.0)
 
-        # Once connected, process frames till drone/stream closes
-        while self.state != self.STATE_QUIT:
-            try:
-                # vs blocks, dies on self.stop
-                for frame in container.decode(video=0):
-                    img = np.array(frame.to_image())
-                    try:
-                        img_msg = self.bridge.cv2_to_imgmsg(img, 'rgb8')
-                        img_msg.header.frame_id = self.caminfo.header.frame_id
-                    except CvBridgeError as err:
-                        rospy.logerr('fgrab: cv bridge failed - %s' % str(err))
-                        continue
-                    self.pub_image_raw.publish(img_msg)
-                    self.pub_caminfo.publish(self.caminfo)                    
-                break
-            except BaseException as err:
-                rospy.logerr('fgrab: pyav decoder failed - %s' % str(err))
+    #     # Once connected, process frames till drone/stream closes
+    #     while self.state != self.STATE_QUIT:
+    #         try:
+    #             # vs blocks, dies on self.stop
+    #             for frame in container.decode(video=0):
+    #                 img = np.array(frame.to_image())
+    #                 try:
+    #                     img_msg = self.bridge.cv2_to_imgmsg(img, 'rgb8')
+    #                     img_msg.header.frame_id = self.caminfo.header.frame_id
+    #                 except CvBridgeError as err:
+    #                     rospy.logerr('fgrab: cv bridge failed - %s' % str(err))
+    #                     continue
+    #                 self.pub_image_raw.publish(img_msg)
+    #                 self.pub_caminfo.publish(self.caminfo)                    
+    #             break
+    #         except BaseException as err:
+    #             rospy.logerr('fgrab: pyav decoder failed - %s' % str(err))
 
 
     def cb_takeoff(self, msg):

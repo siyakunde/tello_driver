@@ -201,53 +201,56 @@ class GamepadTeleopNode:
         self.joy_state = GamepadState()
         self.joy_state.parse(msg)
 
+        # Process manual takeoff
+        if not self.joy_state_prev.Cr and self.joy_state.Cr:
+            self.pub_manual_takeoff.publish()
+
         # Process emergency stop
-        if not self.joy_state_prev.R2 and self.joy_state.R2:
+        if not self.joy_state_prev.Ci and self.joy_state.Ci:
             self.pub_emergency.publish()
-            #rospy.logwarn('Issued RESET')
             return
 
-        # Process takeoff
-        if not self.joy_state_prev.L1 and self.joy_state.L1:
-            self.pub_takeoff.publish()
-            #rospy.logwarn('Issued TAKEOFF')
+        # # Process takeoff
+        # if not self.joy_state_prev.L1 and self.joy_state.L1:
+        #     self.pub_takeoff.publish()
+        #     #rospy.logwarn('Issued TAKEOFF')
 
-        # Process manual takeoff
-        if self.joy_state.L2:
-            self.pub_manual_takeoff.publish()
-            #rospy.logwarn('Issued MANUAL_TAKEOFF')
+        # # Process manual takeoff
+        # if self.joy_state.L2:
+        #     self.pub_manual_takeoff.publish()
+        #     #rospy.logwarn('Issued MANUAL_TAKEOFF')
 
-        # Process throw takeoff
-        if not self.joy_state_prev.DU and self.joy_state.DU:
-            self.pub_throw_takeoff.publish()
-            #rospy.logwarn('Issued THROW_TAKEOFF')
+        # # Process throw takeoff
+        # if not self.joy_state_prev.DU and self.joy_state.DU:
+        #     self.pub_throw_takeoff.publish()
+        #     #rospy.logwarn('Issued THROW_TAKEOFF')
 
-        # Process land
-        if not self.joy_state_prev.R1 and self.joy_state.R1:
-            self.pub_land.publish()
-            #rospy.logwarn('Issued LAND')
+        # # Process land
+        # if not self.joy_state_prev.R1 and self.joy_state.R1:
+        #     self.pub_land.publish()
+        #     #rospy.logwarn('Issued LAND')
 
-        # Process palm land
-        if not self.joy_state_prev.DD and self.joy_state.DD:
-            self.pub_palm_land.publish()
-            #rospy.logwarn('Issued PALM_LAND')
+        # # Process palm land
+        # if not self.joy_state_prev.DD and self.joy_state.DD:
+        #     self.pub_palm_land.publish()
+        #     #rospy.logwarn('Issued PALM_LAND')
 
-        # Process flat trim
-        if not self.joy_state_prev.Cr and self.joy_state.Cr:
-            self.pub_flattrim.publish()
-            #rospy.logwarn('Issued FLATTRIM')
+        # # Process flat trim
+        # if not self.joy_state_prev.Cr and self.joy_state.Cr:
+        #     self.pub_flattrim.publish()
+        #     #rospy.logwarn('Issued FLATTRIM')
             
         # # Process video mode
         # if not self.joy_state_prev.Tr and self.joy_state.Tr:
         #     self.pub_video_mode.publish()
         #     #rospy.logwarn('Issued VIDEO_MODE')            
 
-        if not self.joy_state_prev.Sq and self.joy_state.Sq:
-            self.pub_flip.publish(self.flip_dir)
-            #rospy.logwarn('Issued FLIP %d' % self.flip_dir)
-            self.flip_dir += 1
-            if self.flip_dir > self.MAX_FLIP_DIR:
-                self.flip_dir = 0
+        # if not self.joy_state_prev.Sq and self.joy_state.Sq:
+        #     self.pub_flip.publish(self.flip_dir)
+        #     #rospy.logwarn('Issued FLIP %d' % self.flip_dir)
+        #     self.flip_dir += 1
+        #     if self.flip_dir > self.MAX_FLIP_DIR:
+        #         self.flip_dir = 0
 
         # Update agent bypass mode
         if self.joy_state.Select:

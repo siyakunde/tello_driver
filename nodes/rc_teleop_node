@@ -127,10 +127,10 @@ class RCTeleOpNode:
         # Manual control mode
         if rc_current_state.flight_mode == 'manual':
             cmd = Twist()
-            cmd.linear.x = -self.__normalize_to_range(msg.channels[0], self.transmitter_ranges['roll_min'], self.transmitter_ranges['roll_max'])
-            cmd.linear.y = self.__normalize_to_range(msg.channels[1], self.transmitter_ranges['pitch_min'], self.transmitter_ranges['pitch_max'])
-            cmd.linear.z = self.__normalize_to_range(msg.channels[2], self.transmitter_ranges['throttle_min'], self.transmitter_ranges['throttle_max'])
-            cmd.angular.z = -self.__normalize_to_range(msg.channels[3], self.transmitter_ranges['yaw_min'], self.transmitter_ranges['yaw_max'])
+            cmd.linear.x = -self.__normalize_to_range(msg.channels[0], self.transmitter_ranges['min_roll'], self.transmitter_ranges['max_roll'])
+            cmd.linear.y = self.__normalize_to_range(msg.channels[1], self.transmitter_ranges['min_pitch'], self.transmitter_ranges['max_pitch'])
+            cmd.linear.z = self.__normalize_to_range(msg.channels[2], self.transmitter_ranges['min_thrust'], self.transmitter_ranges['max_thrust'])
+            cmd.angular.z = -self.__normalize_to_range(msg.channels[3], self.transmitter_ranges['min_yaw'], self.transmitter_ranges['max_yaw'])
             
             self.pub_cmd_out.publish(cmd)
 

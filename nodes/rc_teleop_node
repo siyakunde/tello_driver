@@ -144,7 +144,7 @@ class RCTeleOpNode:
 
 def main() -> None:
     # Initialize the node
-    rospy.init_node('forwarder_node', anonymous=True)
+    rospy.init_node('rc_teleop_node', anonymous=True)
 
     # Instantiate a new forwarder with the set ranges
     teleop_node = RCTeleOpNode(

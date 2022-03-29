@@ -112,7 +112,7 @@ class RCTeleOpNode:
         # Extract the current state
         rc_current_state = self.__get_current_state(msg.channels)
 
-        if self.rc_prev_state.flight_mode != 'manual' and rc_current_state.flight_mode == 'manual':
+        if rc_current_state.flight_mode == 'manual':
             self.pub_manual_takeoff.publish()
 
         # Process emergency stop

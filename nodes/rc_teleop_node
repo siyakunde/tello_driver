@@ -36,7 +36,7 @@ class RCState:
 
 
 class RCTeleOpNode:
-    def __init__(self, ranges: dict, eps: int=5) -> None:
+    def __init__(self, ranges, eps=5):
 
         # Maintain the current state
         self.rc_prev_state = RCState()
@@ -59,14 +59,14 @@ class RCTeleOpNode:
         return
 
     
-    def __normalize_to_range(self, value: int, range_min: int, range_max: int) -> int:
+    def __normalize_to_range(self, value, range_min, range_max):
         """
         Normalize a value to the range [-1, 1]
         """
         return int(2 * (value - range_min) / (range_max - range_min) - 1)
 
 
-    def __get_current_state(self, channels) -> RCState:
+    def __get_current_state(self, channels):
         """
         Extract the current state
 
@@ -105,7 +105,7 @@ class RCTeleOpNode:
         return state
 
 
-    def __transmitter_cb(self, msg: RCIn) -> None:
+    def __transmitter_cb(self, msg):
         """
         Convert the MAVROS message into a joy message and forward the converted message
         """
@@ -141,7 +141,7 @@ class RCTeleOpNode:
 
 
 
-def main() -> None:
+def main():
     # Initialize the node
     rospy.init_node('rc_teleop_node', anonymous=True)
 

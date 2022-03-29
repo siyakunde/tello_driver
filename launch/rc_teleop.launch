@@ -23,9 +23,9 @@
 
     <arg name="namespace"       default="tello"/>
 
-    <!-- Forwarder node -->
+    <!-- RC Teleop node -->
 	<group ns="$(arg namespace)">
-        <node pkg="rc_teleop"       type="rc_teleop_node" name="rc_teleop_node" output="screen">
+        <node pkg="tello_driver"       type="rc_teleop_node" name="rc_teleop" output="screen">
             <param name="max_roll"       type="double" value="$(arg max_roll)"/>
             <param name="min_roll"       type="double" value="$(arg min_roll)"/>
             <param name="max_pitch"      type="double" value="$(arg max_pitch)"/>

@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   std_msgs
+  mavros_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -73,7 +74,6 @@ generate_messages(
   geometry_msgs
   nav_msgs
   sensor_msgs
-  
 )
 
 ################################################

@@ -1,0 +1,27 @@
+<launch>
+    <!-- Launch arguments -->
+    <arg name="max_roll"    default="1925"/>
+    <arg name="min_roll"    default="1103"/>
+
+    <arg name="max_pitch"    default="1925"/>
+    <arg name="min_pitch"    default="1103"/>
+
+    <arg name="max_yaw"    default="1925"/>
+    <arg name="min_yaw"    default="1111"/>
+
+    <arg name="max_throttle"    default="1925"/>
+    <arg name="min_throttle"    default="1105"/>
+
+    <!-- Forwarder node -->
+    <node pkg="transmitter_forwarder" type="forwarder_node.py" name="forwarder_node" output="screen">
+        <param name="max_roll" type="double" value="$(arg max_roll)"/>
+        <param name="min_roll" type="double" value="$(arg min_roll)"/>
+        <param name="max_pitch" type="double" value="$(arg max_pitch)"/>
+        <param name="min_pitch" type="double" value="$(arg min_pitch)"/>
+        <param name="max_yaw" type="double" value="$(arg max_yaw)"/>
+        <param name="min_yaw" type="double" value="$(arg min_yaw)"/>
+        <param name="max_throttle" type="double" value="$(arg max_throttle)"/>
+        <param name="min_throttle" type="double" value="$(arg min_throttle)"/>
+    </node>
+
+</launch>

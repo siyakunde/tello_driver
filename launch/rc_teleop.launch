@@ -20,7 +20,7 @@
     <arg name="land"            default="2065"/>
 
     <!-- Forwarder node -->
-    <node pkg="rc_teleop_node" type="rc_teleop_node.py" name="rc_teleop_node" output="screen">
+    <node pkg="rc_teleop_node" type="rc_teleop_node" name="rc_teleop_node" output="screen">
         <param name="max_roll" type="double" value="$(arg max_roll)"/>
         <param name="min_roll" type="double" value="$(arg min_roll)"/>
         <param name="max_pitch" type="double" value="$(arg max_pitch)"/>

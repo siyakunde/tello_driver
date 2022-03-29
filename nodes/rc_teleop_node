@@ -137,7 +137,7 @@ class RCTeleOpNode:
             range_max=self.normalization_ranges['roll_range_max']
         )
 
-        cmd.linear.y = self.__normalize_to_range(
+        cmd.linear.y = -self.__normalize_to_range(
             msg.channels[1], 
             self.transmitter_ranges['min_pitch'], 
             self.transmitter_ranges['max_pitch'], 

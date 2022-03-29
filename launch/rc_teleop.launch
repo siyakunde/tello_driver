@@ -11,8 +11,8 @@
     <arg name="max_yaw"         default="1925"/>
     <arg name="min_yaw"         default="1111"/>
 
-    <arg name="max_throttle"    default="1925"/>
-    <arg name="min_throttle"    default="1105"/>
+    <arg name="max_thrust"    default="1925"/>
+    <arg name="min_thrust"    default="1105"/>
 
     <arg name="manual_mode"     default="965"/>
     <arg name="althold_mode"    default="1515"/>
@@ -32,8 +32,8 @@
             <param name="min_pitch"      type="double" value="$(arg min_pitch)"/>
             <param name="max_yaw"        type="double" value="$(arg max_yaw)"/>
             <param name="min_yaw"        type="double" value="$(arg min_yaw)"/>
-            <param name="max_throttle"   type="double" value="$(arg max_throttle)"/>
-            <param name="min_throttle"   type="double" value="$(arg min_throttle)"/>
+            <param name="max_thrust"   type="double" value="$(arg max_thrust)"/>
+            <param name="min_thrust"   type="double" value="$(arg min_thrust)"/>
             <param name="manual_mode"    type="double" value="$(arg manual_mode)"/>
             <param name="althold_mode"   type="double" value="$(arg althold_mode)"/>
             <param name="computer_mode"  type="double" value="$(arg computer_mode)"/>

@@ -63,7 +63,7 @@ class RCTeleOpNode:
         """
         Normalize a value to the range [-1, 1]
         """
-        return int(2 * (value - range_min) / (range_max - range_min) - 1)
+        return 2 * (value - range_min) / (range_max - range_min) - 1
 
 
     def __get_current_state(self, channels):

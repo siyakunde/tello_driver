@@ -12,8 +12,15 @@
     <arg name="max_throttle"    default="1925"/>
     <arg name="min_throttle"    default="1105"/>
 
+    <arg name="manual_mode"     default="965"/>
+    <arg name="althold_mode"    default="1515"/>
+    <arg name="computer_mode"   default="2065"/>
+
+    <arg name="emergency_stop"  default="965"/>
+    <arg name="land"            default="2065"/>
+
     <!-- Forwarder node -->
-    <node pkg="transmitter_forwarder" type="forwarder_node.py" name="forwarder_node" output="screen">
+    <node pkg="rc_teleop_node" type="rc_teleop_node.py" name="rc_teleop_node" output="screen">
         <param name="max_roll" type="double" value="$(arg max_roll)"/>
         <param name="min_roll" type="double" value="$(arg min_roll)"/>
         <param name="max_pitch" type="double" value="$(arg max_pitch)"/>
@@ -22,6 +29,11 @@
         <param name="min_yaw" type="double" value="$(arg min_yaw)"/>
         <param name="max_throttle" type="double" value="$(arg max_throttle)"/>
         <param name="min_throttle" type="double" value="$(arg min_throttle)"/>
+        <param name="manual_mode" type="double" value="$(arg manual_mode)"/>
+        <param name="althold_mode" type="double" value="$(arg althold_mode)"/>
+        <param name="computer_mode" type="double" value="$(arg computer_mode)"/>
+        <param name="emergency_stop" type="double" value="$(arg emergency_stop)"/>
+        <param name="land" type="double" value="$(arg land)"/>
     </node>
 
 </launch>

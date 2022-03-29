@@ -133,32 +133,32 @@ class RCTeleOpNode:
             msg.channels[0], 
             self.transmitter_ranges['min_roll'], 
             self.transmitter_ranges['max_roll'], 
-            range_min=self.transmitter_ranges['roll_range_min'],
-            range_max=self.transmitter_ranges['roll_range_max']
+            range_min=self.normalization_ranges['roll_range_min'],
+            range_max=self.normalization_ranges['roll_range_max']
         )
 
         cmd.linear.y = self.__normalize_to_range(
             msg.channels[1], 
             self.transmitter_ranges['min_pitch'], 
             self.transmitter_ranges['max_pitch'], 
-            range_min=self.transmitter_ranges['pitch_range_min'],
-            range_max=self.transmitter_ranges['pitch_range_max']
+            range_min=self.normalization_ranges['pitch_range_min'],
+            range_max=self.normalization_ranges['pitch_range_max']
         )
 
         cmd.linear.z = self.__normalize_to_range(
             msg.channels[2], 
             self.transmitter_ranges['min_thrust'], 
             self.transmitter_ranges['max_thrust'], 
-            range_min=self.transmitter_ranges['thrust_range_min'],
-            range_max=self.transmitter_ranges['thrust_range_max']
+            range_min=self.normalization_ranges['thrust_range_min'],
+            range_max=self.normalization_ranges['thrust_range_max']
         )
 
         cmd.angular.z = self.__normalize_to_range(
             msg.channels[3], 
             self.transmitter_ranges['min_yaw'], 
             self.transmitter_ranges['max_yaw'], 
-            range_min=self.transmitter_ranges['yaw_range_min'],
-            range_max=self.transmitter_ranges['yaw_range_max']
+            range_min=self.normalization_ranges['yaw_range_min'],
+            range_max=self.normalization_ranges['yaw_range_max']
         )
         
         # Publish the command

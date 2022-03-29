@@ -36,7 +36,7 @@ class RCState:
 
 
 class RCTeleOpNode:
-    def __init__(self, ranges, eps=5):
+    def __init__(self, transmitter_ranges, normalization_ranges, eps=5):
 
         # Maintain the current state
         self.rc_prev_state = RCState()
@@ -45,7 +45,8 @@ class RCTeleOpNode:
         self.eps = eps
 
         # The parameterized RC settings
-        self.transmitter_ranges = ranges
+        self.transmitter_ranges = transmitter_ranges
+        self.normalization_ranges = normalization_ranges
 
         # ROS Subscribers
         self.mavros_subscriber = rospy.Subscriber("/mavros/rc/in", RCIn, callback=self.__transmitter_cb)
@@ -128,10 +129,37 @@ class RCTeleOpNode:
         cmd = Twist()
 
         # Populate the command with normalized values
-        cmd.linear.x = self.__normalize_to_range(msg.channels[0], self.transmitter_ranges['min_roll'], self.transmitter_ranges['max_roll'])
-        cmd.linear.y = self.__normalize_to_range(msg.channels[1], self.transmitter_ranges['min_pitch'], self.transmitter_ranges['max_pitch'])
-        cmd.linear.z = self.__normalize_to_range(msg.channels[2], self.transmitter_ranges['min_thrust'], self.transmitter_ranges['max_thrust'], range_min=-2, range_max=2)
-        cmd.angular.z = self.__normalize_to_range(msg.channels[3], self.transmitter_ranges['min_yaw'], self.transmitter_ranges['max_yaw'])
+        cmd.linear.x = self.__normalize_to_range(
+            msg.channels[0], 
+            self.transmitter_ranges['min_roll'], 
+            self.transmitter_ranges['max_roll'], 
+            range_min=self.transmitter_ranges['roll_range_min'],
+            range_max=self.transmitter_ranges['roll_range_max']
+        )
+
+        cmd.linear.y = self.__normalize_to_range(
+            msg.channels[1], 
+            self.transmitter_ranges['min_pitch'], 
+            self.transmitter_ranges['max_pitch'], 
+            range_min=self.transmitter_ranges['pitch_range_min'],
+            range_max=self.transmitter_ranges['pitch_range_max']
+        )
+
+        cmd.linear.z = self.__normalize_to_range(
+            msg.channels[2], 
+            self.transmitter_ranges['min_thrust'], 
+            self.transmitter_ranges['max_thrust'], 
+            range_min=self.transmitter_ranges['thrust_range_min'],
+            range_max=self.transmitter_ranges['thrust_range_max']
+        )
+
+        cmd.angular.z = self.__normalize_to_range(
+            msg.channels[3], 
+            self.transmitter_ranges['min_yaw'], 
+            self.transmitter_ranges['max_yaw'], 
+            range_min=self.transmitter_ranges['yaw_range_min'],
+            range_max=self.transmitter_ranges['yaw_range_max']
+        )
         
         # Publish the command
         self.pub_cmd_out.publish(cmd)
@@ -163,6 +191,16 @@ def main():
             'computer_mode': rospy.get_param('~computer_mode'),
             'emergency_stop': rospy.get_param('~emergency_stop'),
             'land': rospy.get_param('~land')
+        },
+        {
+            'roll_range_max': rospy.get_param('~roll_range_max'),
+            'roll_range_min': rospy.get_param('~roll_range_min'),
+            'pitch_range_max': rospy.get_param('~pitch_range_max'),
+            'pitch_range_min': rospy.get_param('~pitch_range_min'),
+            'yaw_range_max': rospy.get_param('~yaw_range_max'),
+            'yaw_range_min': rospy.get_param('~yaw_range_min'),
+            'thrust_range_max': rospy.get_param('~thrust_range_max'),
+            'thrust_range_min': rospy.get_param('~thrust_range_min')
         }
     )
 

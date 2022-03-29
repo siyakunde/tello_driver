@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-    <!-- Launch arguments -->
+    <!-- The PWM Values associated with each input -->
     <arg name="max_roll"        default="1925"/>
     <arg name="min_roll"        default="1103"/>
 
@@ -21,6 +21,19 @@
     <arg name="emergency_stop"  default="965"/>
     <arg name="land"            default="2065"/>
 
+    <!-- The normalization ranges for the stick inputs -->
+    <arg name="roll_range_max"  default="2.5"/>
+    <arg name="roll_range_min"  default="-2.5"/>
+
+    <arg name="pitch_range_max"  default="2.5"/>
+    <arg name="pitch_range_min"  default="-2.5"/>
+
+    <arg name="yaw_range_max"  default="2.5"/>
+    <arg name="yaw_range_min"  default="-2.5"/>
+
+    <arg name="thrust_range_max"  default="2.5"/>
+    <arg name="thrust_range_min"  default="-2.5"/>
+
     <arg name="namespace"       default="tello"/>
 
     <!-- RC Teleop node -->
@@ -39,6 +52,14 @@
             <param name="computer_mode"  type="double" value="$(arg computer_mode)"/>
             <param name="emergency_stop" type="double" value="$(arg emergency_stop)"/>
             <param name="land"           type="double" value="$(arg land)"/>
+            <param name="roll_range_max" type="double" value="$(arg roll_range_max"/>
+            <param name="roll_range_min" type="double" value="$(arg roll_range_min"/>
+            <param name="pitch_range_max" type="double" value="$(arg pitch_range_max"/>
+            <param name="pitch_range_min" type="double" value="$(arg pitch_range_min"/>
+            <param name="yaw_range_max" type="double" value="$(arg yaw_range_max"/>
+            <param name="yaw_range_min" type="double" value="$(arg yaw_range_min"/>
+            <param name="thrust_range_max" type="double" value="$(arg thrust_range_max"/>
+            <param name="thrust_range_min" type="double" value="$(arg thrust_range_min"/>
         </node>
     </group>
 

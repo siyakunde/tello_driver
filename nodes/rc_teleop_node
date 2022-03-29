@@ -130,7 +130,7 @@ class RCTeleOpNode:
         # Populate the command with normalized values
         cmd.linear.x = self.__normalize_to_range(msg.channels[0], self.transmitter_ranges['min_roll'], self.transmitter_ranges['max_roll'])
         cmd.linear.y = self.__normalize_to_range(msg.channels[1], self.transmitter_ranges['min_pitch'], self.transmitter_ranges['max_pitch'])
-        cmd.linear.z = self.__normalize_to_range(msg.channels[2], self.transmitter_ranges['min_thrust'], self.transmitter_ranges['max_thrust'], value_min=-2, value_max=2)
+        cmd.linear.z = self.__normalize_to_range(msg.channels[2], self.transmitter_ranges['min_thrust'], self.transmitter_ranges['max_thrust'], range_min=-2, range_max=2)
         cmd.angular.z = self.__normalize_to_range(msg.channels[3], self.transmitter_ranges['min_yaw'], self.transmitter_ranges['max_yaw'])
         
         # Publish the command
